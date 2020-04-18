@@ -46,6 +46,8 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginService } from './_services/login.service';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { AuthService } from './_services/auth.service';
+import { AuthGuard } from './_guards/auth.guard';
 @NgModule({
   imports: [
     BrowserModule,
@@ -79,7 +81,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
   },
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-  LoginService
+  LoginService,AuthService,AuthGuard
 ],
 schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [ AppComponent ]

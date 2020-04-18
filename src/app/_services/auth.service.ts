@@ -7,14 +7,13 @@ const USER_KEY = '_u';
 const REQUEST_TIME_KEY = '_requested';
 const ACCESS_TOKEN_TIME_KEY = '_att';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AuthService {
   public loggedIn = new BehaviorSubject<boolean>(false);
   private redirectUrl = '/';
 
   get isLoggedIn() {
+    console.log('logged in in get logged in', this.loggedIn)
     return this.loggedIn.asObservable();
   }
   storeToken(data) {
@@ -27,20 +26,22 @@ export class AuthService {
   }
 
   constructor() {
-
+  
     if (this.validateToken()) {
+      
       this.loggedIn.next(true);
     }
    }
 
    validateToken() {
     const session = localStorage.getItem(ACCESS_TOKEN_TIME_KEY);
+    console.log('ACCESS_TOKEN_TIME_KEY', ACCESS_TOKEN_TIME_KEY)
+    console.log('session ', session)
     if (session === 'undefined') {
         return false;
     }
-    const payload = JSON.parse(session);
-    console.log('payload', payload)
-    if (payload) {
+    
+    if (session) {
         const requested = localStorage.getItem(REQUEST_TIME_KEY);
         if (!requested) {
             return false;
@@ -49,10 +50,10 @@ export class AuthService {
         const endDate = new Date();
         const seconds = Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
 
-        if (seconds > payload.Expires ) {
-           this.logout();
+        if (seconds > Number(session)) {
+           //this.logout();
            return false;
-        } else if (seconds < payload.Expires) {
+        } else if (seconds < Number( session)) {
             return true;
         } else {
             this.logout();

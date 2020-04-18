@@ -3,8 +3,8 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { AuthService } from '../../_services/auth.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../../_services/login.service';
-import { NgxSpinnerService } from "ngx-spinner";
 import { ModalsComponent } from '../notifications/modals.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,7 +37,7 @@ export class LoginComponent {
     this.spinner.show();
     const signinData = this.signinForm.value;
     if (this.signinForm.value.Email && this.signinForm.value.Password) {
-      //this.spinner.show();
+     // this.spinner.show();
       this.loginService.login(this.signinForm.value).subscribe(_result => {
        console.log('_result is', _result)
         if (typeof _result.Payload !== typeof undefined) {
@@ -46,15 +46,23 @@ export class LoginComponent {
           this.authService.storeTokenTime(_result.Payload.Expires);
           this.authService.loggedIn.next(true);
           this.router.navigate(['/dashboard']);
+         this.spinner.hide();
+
         }
         this.router.navigateByUrl('/');
       }, _error => {
+         this.spinner.hide();
         this.signinForm.reset();
 
         this.authFailed = true;
 
       });
-      this.spinner.hide();
+
+      //
+    }
+    else {
+    this.spinner.hide();
+     
     }
 
   }
